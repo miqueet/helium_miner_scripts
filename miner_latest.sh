@@ -14,11 +14,6 @@ elif miner_latest=$(curl -s 'https://quay.io/api/v1/repository/team-helium/miner
 echo "Latest miner version" $miner_latest;
 fi
 
-if ` echo $miner_latest | grep -q $ARCH`;
-then continue
-else echo "latest miner release not found" && exit 0
-fi
-
 running_image=$(docker images quay.io/team-helium/miner:$miner_latest -q)
 
 if [[ $running_image ]];
