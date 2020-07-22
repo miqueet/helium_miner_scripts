@@ -3,7 +3,9 @@
 Script useage
 
 pi@raspberrypi:~ $ ./miner_latest.sh
+
 Latest miner version miner-arm64_2020.07.17.0_GA
+
 already on the latest version
 
 
