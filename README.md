@@ -16,7 +16,7 @@ Make sure the user that is running is allowed to run docker. Either add the user
 After cloning this repositry make teh script executable:
 
 ```
-chmod +x miner_latest.sh
+$ chmod +x miner_latest.sh
 ```
 
 Currently it is setup to use arm64 version, but it can be easily modified to use the amd64 docker image build by modifying the ARCH variable to equal ``amd`` instead of ``arm``.
