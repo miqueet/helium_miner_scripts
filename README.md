@@ -42,3 +42,19 @@ Add the following lines to your crontab using ``cron -e`` to run the escript day
 0 1 * * * cd ~/helium_miner_scripts $$ ./miner_latest.sh >> /var/log/miner_latest.log 2>&1
 ```
 
+# Extra
+
+Check if your miner is running and receiving data fromyour gateway:
+```
+$ docker exec miner tail -f /var/log/miner/console.log | grep lora
+```
+
+Check progress of your miner on the blockchain:
+```
+$ docker exec miner miner info height
+```
+
+Check connectivity of your miner:
+```
+$ docker exec miner miner peer book -s
+```
