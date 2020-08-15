@@ -34,4 +34,11 @@ $ ./miner_latest.sh
 
 This can be called from a cron or ran in a shell.
 
+## Using cron
+Add the following lines to your crontab using ``cron -e`` to run the escript dayly at 1 o clock at night:
+
+```
+# Check for updates on miner image verey night at 1 o clock
+0 1 * * * cd ~/helium_miner_scripts $$ ./miner_latest.sh >> /var/log/miner_latest.log 2>&1
+```
 
