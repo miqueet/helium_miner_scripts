@@ -9,7 +9,7 @@ Following dependencies shalle be met:
 - Curl
 - jq
 
-Make sure the user that is running is allowed to run docker. Either add the user to the docker group or run the scipt as root.
+Make sure the user that is running the script is allowed to run docker. Either add the user to the docker group or run the scipt as root. See: https://docs.docker.com/engine/install/linux-postinstall/
 
 # Configuration
 
