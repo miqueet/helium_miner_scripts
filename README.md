@@ -19,7 +19,7 @@ $ chmod +x miner_latest.sh
 ## Change architecture 
 Currently it is setup to use arm64 version, but it can be easily modified to use the amd64 docker image build by modifying the ARCH variable to equal ``amd`` instead of ``arm``.
 
-## change region
+## Change region
 By default the script is configured for US915 frequencies. To use the miner in other regios like EU868 the script shall be changed by adding the `` --env  REGION_OVERRIDE=EU868`` to the line with ``docker run``:
 
 ```
