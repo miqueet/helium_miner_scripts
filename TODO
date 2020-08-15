@@ -1,3 +1,6 @@
-Auto recognize the machine architecture.
+# Todo list
 
-Delete old images
+- Auto recognize the machine architecture.
+- Delete old images
+- check dependencies
+- make region configureable.
