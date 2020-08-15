@@ -4,7 +4,7 @@ This script will automatically detect if that latest docker image is running and
 
 # Dependencies
 
-Following dependencies shalle be met:
+Following dependencies shall be met:
 
 - Curl
 - jq
