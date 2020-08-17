@@ -37,7 +37,6 @@ elif miner_latest=$(curl -s 'https://quay.io/api/v1/repository/team-helium/miner
 then echo "Latest miner version" $miner_latest;
 fi
 
-running_image=$(docker images quay.io/team-helium/miner:$miner_latest -q)
 
 if [ $miner_latest = $running_image ];
 then    echo "already on the latest version"
