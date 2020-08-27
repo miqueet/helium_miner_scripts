@@ -1,15 +1,33 @@
 #!/bin/bash
 
-#auto updating the helium miner. This was written for 
+# Script for auto updating the helium miner.
 
+# Set default values
+MINER=miner
+REGION=US915
+GWPORT=1680
+MINERPORT=44158
+DATADIR=/home/pi/miner_data
 
-ARCH=arm
+# Read switches to override any default values for non-standard configs
+while getopts n:g:p:d:r: flag
+do
+   case "${flag}" in
+      n) MINER=${OPTARG};;
+      g) GWPORT=${OPTARG};;
+      p) MINERPORT=${OPTARG};;
+      d) DATADIR=${OPTARG};;
+      r) REGION=${OPTARG};;
+   esac
+done
 
-#if you're running the miner on amd64 based architecture uncomment below
-#if you accidently install the wrong miner software, the miner will immediately crash and you will need to remove the bad image
-#docker stop miner && docker rm miner && docker image ls
-#remove the bad image with "docker image rm [IMAGE ID]
-#ARCH=amd
+# Autodetect running image version and set arch
+running_image=$(docker container inspect -f '{{.Config.Image}}' $MINER | awk -F: '{print $2}')
+if [ `echo $running_image | awk -F_ '{print $1}'` = "miner-arm64" ]; then
+   ARCH=arm
+else
+   ARCH=amd
+fi
 
 miner_latest=$(curl -s 'https://quay.io/api/v1/repository/team-helium/miner/tag/?limit=100&page=1&onlyActiveTags=true' | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH)) ][0].name' | cut -d'"' -f2)
 
@@ -21,17 +39,25 @@ elif miner_latest=$(curl -s 'https://quay.io/api/v1/repository/team-helium/miner
 then echo "Latest miner version" $miner_latest;
 fi
 
-running_image=$(docker images quay.io/team-helium/miner:$miner_latest -q)
 
-if [[ $running_image ]];
+if [ $miner_latest = $running_image ];
 then    echo "already on the latest version"
         exit 0
 fi
 
 echo "Stopping and removing old miner"
 
-docker stop miner && docker rm miner
+docker stop $MINER && docker rm $MINER
 
-echo "Running new miner version"
+echo "Provisioning new miner version"
 
-docker run -d --restart always --publish 1680:1680/udp --publish 44158:44158/tcp --name miner --mount type=bind,source=/home/pi/miner_data,target=/var/data quay.io/team-helium/miner:$miner_latest
+docker run -d --env REGION_OVERRIDE=$REGION --restart always --publish $GWPORT:$GWPORT/udp --publish $MINERPORT:$MINERPORT/tcp --name $MINER --mount type=bind,source=$DATADIR,target=/var/data quay.io/team-helium/miner:$miner_latest
+
+if [ $GWPORT -ne 1680 ] || [ $MINERPORT -ne 44158 ]; then
+   echo "Using nonstandard ports, adjusting miner config"
+   docker cp $MINER:/opt/miner/releases/0.1.0/sys.config /tmp
+   sed -i "s/44158/$MINERPORT/; s/1680/$GWPORT/" /tmp/sys.config
+   docker cp /tmp/sys.config $MINER:/opt/miner/releases/0.1.0/
+   docker restart $MINER
+   rm /tmp/sys.config
+fi
