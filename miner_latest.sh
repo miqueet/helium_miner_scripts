@@ -13,6 +13,7 @@ ARCH=arm
 
 miner_latest=$(curl -s 'https://quay.io/api/v1/repository/team-helium/miner/tag/?limit=100&page=1&onlyActiveTags=true' | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH)) ][0].name' | cut -d'"' -f2)
 
+date
 
 if `echo $miner_latest | grep -q $ARCH`;
 then echo "Latest miner version" $miner_latest;
