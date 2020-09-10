@@ -39,7 +39,7 @@ Add the following lines to your crontab using ``cron -e`` to run the escript day
 
 ```
 # Check for updates on miner image verey night at 1 o clock
-0 1 * * * cd ~/helium_miner_scripts $$ ./miner_latest.sh >> /var/log/miner_latest.log 2>&1
+0 1 * * * cd ~/helium_miner_scripts && ./miner_latest.sh >> /var/log/miner_latest.log 2>&1
 ```
 
 # Extra
