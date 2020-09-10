@@ -53,9 +53,6 @@ docker run -d --env REGION_OVERRIDE=$REGION --restart always --publish $GWPORT:$
 
 if [ $GWPORT -ne 1680 ] || [ $MINERPORT -ne 44158 ]; then
    echo "Using nonstandard ports, adjusting miner config"
-   docker cp $MINER:/opt/miner/releases/0.1.0/sys.config /tmp
-   sed -i "s/44158/$MINERPORT/; s/1680/$GWPORT/" /tmp/sys.config
-   docker cp /tmp/sys.config $MINER:/opt/miner/releases/0.1.0/
+   docker exec $MINER sed -i "s/44158/$MINERPORT/; s/1680/$GWPORT/" /opt/miner/releases/0.1.0/sys.config
    docker restart $MINER
-   rm /tmp/sys.config
 fi
