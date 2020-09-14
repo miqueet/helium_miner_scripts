@@ -14,6 +14,8 @@ After cloning this repository make the script executable:
 
 ```
 $ chmod +x miner_latest.sh
+$ sudo touch /var/log/miner_latest.log
+
 ```
 
 ## Change architecture 
@@ -39,7 +41,9 @@ Add the following lines to your crontab using ``cron -e`` to run the escript day
 
 ```
 # Check for updates on miner image every night at 1 o clock
-0 1 * * * cd ~/helium_miner_scripts && ./miner_latest.sh >> /var/log/miner_latest.log 2>&1
+# Use whatever path you have your repo setup with.
+# If you need to test your cron you can use the following site and add "&& curl -s 'https://webhook.site/#!/~'" to the end of your cron and it will make a web request to your specific url when it completes.
+0 1 * * * /home/pi/helium_miner_scripts/miner_latest.sh >> /var/log/miner_latest.log 2>&1
 ```
 
 # Extra
