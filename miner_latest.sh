@@ -25,8 +25,10 @@ done
 running_image=$(docker container inspect -f '{{.Config.Image}}' $MINER | awk -F: '{print $2}')
 if [ `echo $running_image | awk -F_ '{print $1}'` = "miner-arm64" ]; then
    ARCH=arm
-else
+elif [ `echo $running_image | awk -F_ '{print $1}'` = "miner-amd64" ]; then 
    ARCH=amd
+else
+   ARCH=arm
 fi
 
 #miner_latest=$(curl -s 'https://quay.io/api/v1/repository/team-helium/miner/tag/?limit=100&page=1&onlyActiveTags=true' | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH)) ][0].name' | cut -d'"' -f2)
