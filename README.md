@@ -46,7 +46,7 @@ Add the following lines to your crontab using ``sudo crontab -e`` to run the scr
 
 Check if your miner is running and receiving data from your gateway:
 ```
-$ docker exec miner tail -f /var/log/miner/console.log | grep "PULL_DATA"
+$ docker exec miner tail -f /var/log/miner/console.log | grep "lora"
 ```
 
 Check progress of your miner on the blockchain:
