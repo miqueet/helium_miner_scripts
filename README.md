@@ -35,7 +35,7 @@ $ ./miner_latest.sh
 This can be called from a cron or ran in a shell.
 
 ## Using cron
-Add the following lines to your crontab using ``cron -e`` to run the escript dayly at 1 o clock at night:
+Add the following lines to your crontab using ``sudo crontab -e`` to run the script daily at 1 o clock at night:
 
 ```
 # Check for updates on miner image every night at 1 o clock
