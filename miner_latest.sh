@@ -23,12 +23,16 @@ done
 
 # Autodetect running image version and set arch
 running_image=$(docker container inspect -f '{{.Config.Image}}' $MINER | awk -F: '{print $2}')
-if [ `echo $running_image | awk -F_ '{print $1}'` = "miner-arm64" ]; then
-   ARCH=arm
-elif [ `echo $running_image | awk -F_ '{print $1}'` = "miner-amd64" ]; then 
-   ARCH=amd
+if [ -z "$running_image" ]; then
+	ARCH=arm
+elif [ `echo $running_image | awk -F_ '{print $1}'` == "miner-arm64" ]; then
+	ARCH=arm
+elif [ `echo $running_image | awk -F_ '{print $1}'` == "miner-amd64" ]; then 
+	ARCH=amd
 else
-   ARCH=arm
+	ARCH=arm
+	#below is just to make it not null.
+	running_image=" "
 fi
 
 #miner_latest=$(curl -s 'https://quay.io/api/v1/repository/team-helium/miner/tag/?limit=100&page=1&onlyActiveTags=true' | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH)) ][0].name' | cut -d'"' -f2)
@@ -53,8 +57,7 @@ elif miner_latest=$(curl -s 'https://quay.io/api/v1/repository/team-helium/miner
 then echo "Latest miner version" $miner_latest;
 fi
 
-
-if [ $miner_latest = $running_image ];
+if [ "$miner_latest" = "$running_image" ];
 then    echo "already on the latest version"
         exit 0
 fi
@@ -62,6 +65,20 @@ fi
 echo "Stopping and removing old miner"
 
 docker stop $MINER && docker rm $MINER
+
+echo "Deleting old miner software"
+
+for a in `docker images quay.io/team-helium/miner | grep "quay.io/team-helium/miner" | awk '{print $3}'`; do
+	image_cleanup=$(docker images | grep $a | awk '{print $2}')
+	#change this to $running_image if you want to keep the last 2 images
+	if [ $image_cleanup = $miner_latest ]; then
+	       continue
+        else
+		echo "Cleaning up: " $image_cleanup
+	       	docker image rm $a
+        
+        fi		
+done
 
 echo "Provisioning new miner version"
 

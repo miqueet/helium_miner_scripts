@@ -37,7 +37,7 @@ $ ./miner_latest.sh
 This can be called from a cron or ran in a shell.
 
 ## Using cron
-Add the following lines to your crontab using ``cron -e`` to run the escript dayly at 1 o clock at night:
+Add the following lines to your crontab using ``sudo crontab -e`` to run the script daily at 1 o clock at night:
 
 ```
 # Check for updates on miner image every night at 1 o clock
@@ -48,9 +48,9 @@ Add the following lines to your crontab using ``cron -e`` to run the escript day
 
 # Extra
 
-Check if your miner is running and receiving data fromyour gateway:
+Check if your miner is running and receiving data from your gateway:
 ```
-$ docker exec miner tail -f /var/log/miner/console.log | grep lora
+$ docker exec miner tail -f /var/log/miner/console.log | grep "lora"
 ```
 
 Check progress of your miner on the blockchain:
