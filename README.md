@@ -43,7 +43,7 @@ Add the following lines to your crontab using ``sudo crontab -e`` to run the scr
 # Check for updates on miner image every night at 1 o clock
 # Use whatever path you have your repo setup with.
 # If you need to test your cron you can use the following site and add "&& curl -s 'https://webhook.site/#!/~'" to the end of your cron and it will make a web request to your specific url when it completes.
-0 1 * * * /home/pi/helium_miner_scripts/miner_latest.sh >> /var/log/miner_latest.log 2>&1
+0 1 * * * /home/pi/helium_miner_scripts/miner_latest.sh >> /var/log/miner_latest.log
 ```
 
 # Extra
