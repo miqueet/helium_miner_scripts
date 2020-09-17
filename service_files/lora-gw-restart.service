@@ -1,0 +1,13 @@
+[Unit]
+Description=Restart LoRa Gateway
+
+[Service]
+ExecStart=/home/pi/lora_gateway/reset_lgw.sh start 17
+WorkingDirectory=/home/pi/lora_gateway
+StandardOutput=inherit
+StandardError=inherit
+Restart=on_failure
+User=root
+
+[Install]
+WantedBy=multi-user.target

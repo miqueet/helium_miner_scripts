@@ -9,6 +9,12 @@ GWPORT=1680
 MINERPORT=44158
 DATADIR=/home/pi/miner_data
 
+testJQ=$(which jq)
+
+if [ $? -ne 0 ]; then
+       	sudo apt install jq curl -y 
+fi
+
 # Read switches to override any default values for non-standard configs
 while getopts n:g:p:d:r: flag
 do
