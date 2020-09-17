@@ -33,8 +33,9 @@ sudo systemctl enable lora-pkt-fwd.service
 sudo systemctl start lora-gw-restart.service
 sudo systemctl start lora-pkt-fwd.service
 
-cd ~
-git clone https://github.com/Wheaties466/helium_miner_scripts.git
+#i'm an idiot for including this
+#cd ~
+#git clone https://github.com/Wheaties466/helium_miner_scripts.git
 
 sudo touch /var/log/miner_latest.log
 crontab -l > crondump
