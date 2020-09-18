@@ -36,10 +36,13 @@ This can be called from a cron or ran in a shell.
 
 ## Using cron
 Add the following lines to your crontab using ``sudo crontab -e`` to run the script daily at 1 o clock at night:
+The second line updates this repo on a regular basis.
 
 ```
 # Check for updates on miner image every night at 1 o clock
 0 1 * * * cd ~/helium_miner_scripts && ./miner_latest.sh >> /var/log/miner_latest.log 2>&1
+
+0 0 * * * cd /home/pi/helium_miner_scripts && git pull
 ```
 
 # Extra
