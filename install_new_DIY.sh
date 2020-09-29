@@ -4,7 +4,7 @@
 sudo apt update -y
 sudo apt upgrade -y
 
-sudo apt install curl jq docker.io -y
+sudo apt install curl jq docker.io git -y
 
 sudo usermod -aG docker pi
 
@@ -61,5 +61,11 @@ sudo raspi-config nonint do_serial 1
 sudo raspi-config nonint do_wifi_country US
 sudo raspi-config nonint do_ssh 1
 
+locale=en_US.UTF-8
+layout=us
+sudo raspi-config nonint do_change_locale $locale
+sudo raspi-config nonint do_configure_keyboard $layout
+
 echo "rebooting the pi in 10 seconds, CTRL + C to stop"
+sleep 10
 sudo reboot
