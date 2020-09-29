@@ -23,11 +23,11 @@ curl -s -o ~/packet_forwarder/lora_pkt_fwd/global_conf.json 'https://helium-medi
 #sed link
 sed -i 's/#define SPI_SPEED       8000000/#define SPI_SPEED       2000000/' /home/pi/lora_gateway/libloragw/src/loragw_spi.native.c
 
-cd /home/pi/cd packet_forwarder/
+cd /home/pi/packet_forwarder/
 ./compile.sh
 
-cp ~/helium_miner_scripts/service_files/lora-gw-restart.service /etc/systemd/system/lora-gw-restart.service
-cp ~/helium_miner_scripts/service_files/lora-pkt-fwd.service /etc/systemd/system/lora-pkt-fwd.service
+sudo cp ~/helium_miner_scripts/service_files/lora-gw-restart.service /etc/systemd/system/lora-gw-restart.service
+sudo cp ~/helium_miner_scripts/service_files/lora-pkt-fwd.service /etc/systemd/system/lora-pkt-fwd.service
 
 sudo systemctl enable lora-gw-restart.service
 sudo systemctl enable lora-pkt-fwd.service
