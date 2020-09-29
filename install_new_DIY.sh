@@ -38,10 +38,11 @@ sudo systemctl start lora-pkt-fwd.service
 #cd ~
 #git clone https://github.com/Wheaties466/helium_miner_scripts.git
 
-sudo touch /var/log/miner_latest.log
-crontab -l > crondump
-echo "0 1 * * * /home/pi/helium_miner_scripts/miner_latest.sh >> /var/log/miner_latest.log" >> crondump
-crontab crondump
+sudo touch ~/crondump
+sudo chmod 777 ~/crondump
+sudo crontab -l > ~/crondump
+echo "0 1 * * * /home/pi/helium_miner_scripts/miner_latest.sh >> /var/log/miner_latest.log" >> ~/crondump
+sudo crontab -u pi ~/crondump
 
 echo "remember to backup your swarm key found here: /home/pi/miner_data/miner/swarm_key"
 echo "use WinSCP(or another program) to transfer this file to another computer and back it up. This is VERY IMPORTANT"
