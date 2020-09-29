@@ -42,6 +42,7 @@ sudo touch ~/crondump
 sudo chmod 777 ~/crondump
 sudo crontab -l > ~/crondump
 echo "0 1 * * * /home/pi/helium_miner_scripts/miner_latest.sh >> /var/log/miner_latest.log" >> ~/crondump
+echo "0 0 * * * cd /home/pi/helium_miner_scripts && git pull" >> ~/crondump
 sudo crontab -u pi ~/crondump
 
 echo "remember to backup your swarm key found here: /home/pi/miner_data/miner/swarm_key"
