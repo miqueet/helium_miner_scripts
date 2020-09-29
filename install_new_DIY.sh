@@ -53,10 +53,6 @@ echo "/home/pi/helium_miner_scripts/miner_latest.sh && cd /home/pi/miner_data/mi
 echo " CTRL + C will cancel the webserver, but open a web browser and go to http://"$ip":3000/swarm_key"
 echo "Save the file locally"
 
-echo "expanding the file system"
-
-sudo raspi-config nonint do_expand_rootfs
-
 # I think one of these was causing issues booting after applying.
 #sudo raspi-config nonint do_spi 1
 #sudo raspi-config nonint do_i2c 1
