@@ -4,7 +4,7 @@
 sudo apt update -y
 sudo apt upgrade -y
 
-sudo apt install curl jq docker.io git -y
+sudo apt install curl jq docker.io git vim -y
 
 sudo usermod -aG docker pi
 
