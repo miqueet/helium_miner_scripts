@@ -1,101 +1,5 @@
 #!/bin/bash
 
-set_config_var() {
-  lua - "$1" "$2" "$3" <<EOF > "$3.bak"
-local key=assert(arg[1])
-local value=assert(arg[2])
-local fn=assert(arg[3])
-local file=assert(io.open(fn))
-local made_change=false
-for line in file:lines() do
-  if line:match("^#?%s*"..key.."=.*$") then
-    line=key.."="..value
-    made_change=true
-  end
-  print(line)
-end
-
-if not made_change then
-  print(key.."="..value)
-end
-EOF
-mv "$3.bak" "$3"
-}
-#turn on spi
-set_config_var dtparam=spi on /boot/config.txt
-sed "/etc/modprobe.d/raspi-blacklist.conf -i -e s/^\(blacklist[[:space:]]*spi[-_]bcm2708\)/#\1/"
-dtparam spi=on
-
-#turn on i2c
-set_config_var dtparam=i2c_arm on /boot/config.txt
-sed "/etc/modprobe.d/raspi-blacklist.conf -i -e s/^\(blacklist[[:space:]]*i2c[-_]bcm2708\)/#\1/"
-sed "/etc/modules -i -e s/^#[[:space:]]*\(i2c[-_]dev\)/\1/"
-dtparam i2c_arm=on
-modprobe i2c-dev
-
-#turn off login from serial and turn on serial
-sed -i /boot/cmdline.txt -e s/console=ttyAMA0,[0-9]\//
-sed -i /boot/cmdline.txt -e s/console=serial0,[0-9]\//
-
-set_config_var enable_uart 1 /boot/config.txt
-
-do_expand_rootfs() {
-  ROOT_PART="$(findmnt / -o source -n)"
-  ROOT_DEV="/dev/$(lsblk -no pkname "$ROOT_PART")"
-
-  PART_NUM="$(echo "$ROOT_PART" | grep -o "[[:digit:]]*$")"
-
-  # Get the starting offset of the root partition
-  PART_START=$(parted "$ROOT_DEV" -ms unit s p | grep "^${PART_NUM}" | cut -f 2 -d: | sed 's/[^0-9]//g')
-  [ "$PART_START" ] || return 1
-  # Return value will likely be error for fdisk as it fails to reload the
-  # partition table because the root fs is mounted
-  fdisk "$ROOT_DEV" <<EOF
-p
-d
-$PART_NUM
-n
-p
-$PART_NUM
-$PART_START
-
-p
-w
-EOF
-
-  # now set up an init.d script
-cat <<EOF > /etc/init.d/resize2fs_once &&
-#!/bin/sh
-### BEGIN INIT INFO
-# Provides:          resize2fs_once
-# Required-Start:
-# Required-Stop:
-# Default-Start: 3
-# Default-Stop:
-# Short-Description: Resize the root filesystem to fill partition
-# Description:
-### END INIT INFO
-
-. /lib/lsb/init-functions
-
-case "\$1" in
-  start)
-    log_daemon_msg "Starting resize2fs_once" &&
-    resize2fs "$ROOT_PART" &&
-    update-rc.d resize2fs_once remove &&
-    rm /etc/init.d/resize2fs_once &&
-    log_end_msg \$?
-    ;;
-  *)
-    echo "Usage: \$0 start" >&2
-    exit 3
-    ;;
-esac
-EOF
-  chmod +x /etc/init.d/resize2fs_once &&
-  update-rc.d resize2fs_once defaults &&
-  fi
-}
 
 sudo apt update -y
 sudo apt upgrade -y
@@ -149,7 +53,13 @@ echo "/home/pi/helium_miner_scripts/miner_latest.sh && cd /home/pi/miner_data/mi
 echo " CTRL + C will cancel the webserver, but open a web browser and go to http://"$ip":3000/swarm_key"
 echo "Save the file locally"
 
-do_expand_rootfs
+echo "expanding the file system"
+sudo raspi-config nonint do_expand_rootfs
+sudo raspi-config nonint do_spi 1
+sudo raspi-config nonint do_i2c 1
+sudo raspi-config nonint do_serial 1
+sudo raspi-config nonint do_wifi_country US
+sudo raspi-config nonint do_ssh 1
 
 echo "rebooting the pi in 10 seconds, CTRL + C to stop"
 sudo reboot
