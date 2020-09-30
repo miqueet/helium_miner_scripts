@@ -62,3 +62,9 @@ Check connectivity of your miner:
 ```
 $ docker exec miner miner peer book -s
 ```
+
+# If this guide helped you please consider donating HNT the following address
+```
+13UcQB9B867b6Fp6cwtKgzxfwrr61sbxMpPsXChqPYRr9iFoTar
+```
+
