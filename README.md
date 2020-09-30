@@ -6,7 +6,9 @@ Following dependencies shall be met:
 
 - Curl
 - jq
-
+```
+$ sudo apt install curl jq -y
+```
 Make sure the user that is running the script is allowed to run docker. Either add the user to the docker group or run the scipt as root. See: https://docs.docker.com/engine/install/linux-postinstall/
 
 # Configuration
