@@ -56,11 +56,11 @@ echo " CTRL + C will cancel the webserver, but open a web browser and go to http
 echo "Save the file locally"
 
 # I think one of these was causing issues booting after applying.
-#sudo raspi-config nonint do_spi 1
-#sudo raspi-config nonint do_i2c 1
-#sudo raspi-config nonint do_serial 1
-#sudo raspi-config nonint do_wifi_country US
-#sudo raspi-config nonint do_ssh 1
+sudo raspi-config nonint do_spi 1
+sudo raspi-config nonint do_i2c 1
+sudo raspi-config nonint do_serial 1
+sudo raspi-config nonint do_wifi_country US
+sudo raspi-config nonint do_ssh 1
 
 locale=en_US.UTF-8
 layout=us
