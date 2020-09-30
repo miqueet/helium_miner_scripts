@@ -67,6 +67,10 @@ layout=us
 sudo raspi-config nonint do_change_locale $locale
 sudo raspi-config nonint do_configure_keyboard $layout
 
+#add swap
+sudo dphys-swapfile swapoff
+sudo sed -i -e 's/CONF_SWAPSIZE=100/CONF_SWAPSIZE=1024/g' /etc/dphys-swapfile
+
 echo "rebooting the pi in 10 seconds, CTRL + C to stop"
 sleep 10
 sudo reboot
