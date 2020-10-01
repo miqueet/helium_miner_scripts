@@ -67,6 +67,10 @@ Check connectivity of your miner:
 ```
 $ docker exec miner miner peer book -s
 ```
+Check the current running miner version
+```
+$ docker container inspect -f '{{.Config.Image}}' miner | awk -F: '{print $2}'
+```
 
 # If this guide helped you please consider donating HNT the following address
 ```
