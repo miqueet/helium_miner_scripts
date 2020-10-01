@@ -6,7 +6,9 @@ Following dependencies shall be met:
 
 - Curl
 - jq
-
+```
+$ sudo apt install curl jq -y
+```
 Make sure the user that is running the script is allowed to run docker. Either add the user to the docker group or run the scipt as root. See: https://docs.docker.com/engine/install/linux-postinstall/
 
 # Configuration
@@ -14,6 +16,8 @@ After cloning this repository make the script executable:
 
 ```
 $ chmod +x miner_latest.sh
+$ sudo touch /var/log/miner_latest.log
+
 ```
 
 ## Change architecture 
@@ -40,8 +44,10 @@ The second line updates this repo on a regular basis.
 
 ```
 # Check for updates on miner image every night at 1 o clock
-0 1 * * * cd ~/helium_miner_scripts && ./miner_latest.sh >> /var/log/miner_latest.log 2>&1
 
+# Use whatever path you have your repo setup with.
+# If you need to test your cron you can use the following site and add "&& curl -s 'https://webhook.site/#!/~'" to the end of your cron and it will make a web request to your specific url when it completes.
+0 1 * * * /home/pi/helium_miner_scripts/miner_latest.sh >> /var/log/miner_latest.log
 0 0 * * * cd /home/pi/helium_miner_scripts && git pull
 ```
 
@@ -61,3 +67,9 @@ Check connectivity of your miner:
 ```
 $ docker exec miner miner peer book -s
 ```
+
+# If this guide helped you please consider donating HNT the following address
+```
+13UcQB9B867b6Fp6cwtKgzxfwrr61sbxMpPsXChqPYRr9iFoTar
+```
+
