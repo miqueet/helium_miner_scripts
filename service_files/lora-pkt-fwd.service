@@ -1,0 +1,14 @@
+[Unit]
+Description=Lora Packet Forwarder
+After=lora-gw-restart.service
+
+[Service]
+ExecStart=/home/pi/packet_forwarder/lora_pkt_fwd/lora_pkt_fwd
+WorkingDirectory=/home/pi/packet_forwarder/lora_pkt_fwd
+StandardOutput=inherit
+StandardError=inherit
+Restart=on-failure
+User=root
+
+[Install]
+WantedBy=multi-user.target

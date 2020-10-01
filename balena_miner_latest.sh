@@ -28,7 +28,7 @@ do
 done
 
 # Autodetect running image version and set arch
-running_image=$(docker container inspect -f '{{.Config.Image}}' $MINER | awk -F: '{print $2}')
+running_image=$(balena-engine container inspect -f '{{.Config.Image}}' $MINER | awk -F: '{print $2}')
 if [ -z "$running_image" ]; then
 	ARCH=arm
 elif [ `echo $running_image | awk -F_ '{print $1}'` == "miner-arm64" ]; then
@@ -70,28 +70,28 @@ fi
 
 echo "Stopping and removing old miner"
 
-docker stop $MINER && docker rm $MINER
+balena-engine stop $MINER && balena-engine rm $MINER
 
 echo "Deleting old miner software"
 
-for a in `docker images quay.io/team-helium/miner | grep "quay.io/team-helium/miner" | awk '{print $3}'`; do
-	image_cleanup=$(docker images | grep $a | awk '{print $2}')
+for a in `balena-engine images quay.io/team-helium/miner | grep "quay.io/team-helium/miner" | awk '{print $3}'`; do
+	image_cleanup=$(balena-engine images | grep $a | awk '{print $2}')
 	#change this to $running_image if you want to keep the last 2 images
 	if [ $image_cleanup = $miner_latest ]; then
 	       continue
         else
 		echo "Cleaning up: " $image_cleanup
-	       	docker image rm $a
+	       	balena-engine image rm $a
         
         fi		
 done
 
 echo "Provisioning new miner version"
 
-docker run -d --env REGION_OVERRIDE=$REGION --restart always --publish $GWPORT:$GWPORT/udp --publish $MINERPORT:$MINERPORT/tcp --name $MINER --mount type=bind,source=$DATADIR,target=/var/data quay.io/team-helium/miner:$miner_latest
+balena-engine run -d --env REGION_OVERRIDE=$REGION --restart always --publish $GWPORT:$GWPORT/udp --publish $MINERPORT:$MINERPORT/tcp --name $MINER --mount type=bind,source=$DATADIR,target=/var/data quay.io/team-helium/miner:$miner_latest
 
 if [ $GWPORT -ne 1680 ] || [ $MINERPORT -ne 44158 ]; then
    echo "Using nonstandard ports, adjusting miner config"
-   docker exec $MINER sed -i "s/44158/$MINERPORT/; s/1680/$GWPORT/" /opt/miner/releases/0.1.0/sys.config
-   docker restart $MINER
+   balena-engine exec $MINER sed -i "s/44158/$MINERPORT/; s/1680/$GWPORT/" /opt/miner/releases/0.1.0/sys.config
+   balena-engine restart $MINER
 fi
