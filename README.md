@@ -47,7 +47,7 @@ The second line updates this repo on a regular basis.
 
 # Use whatever path you have your repo setup with.
 # If you need to test your cron you can use the following site and add "&& curl -s 'https://webhook.site/#!/~'" to the end of your cron and it will make a web request to your specific url when it completes.
-0 1 * * * /home/pi/helium_miner_scripts/miner_latest.sh >> /var/log/miner_latest.log
+0 */4 * * * /home/pi/helium_miner_scripts/miner_latest.sh >> /var/log/miner_latest.log
 0 0 * * * cd /home/pi/helium_miner_scripts && git pull
 ```
 
