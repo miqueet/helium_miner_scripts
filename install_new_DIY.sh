@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Welcome!
+# Just want to get a few things out of the way. This script assumes you're running this on a raspberry pi 4 with raspberian lite freshly installed.
 
 sudo apt update -y
 sudo apt upgrade -y
