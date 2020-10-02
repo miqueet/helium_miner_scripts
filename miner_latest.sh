@@ -22,7 +22,10 @@ do
 done
 
 # Autodetect running image version and set arch
-image=$(docker container inspect -f '{{.Config.Image}}' miner)
+image=$(docker container inspect -f '{{.Config.Image}}' $MINER 2>/dev/null) || {
+   echo "The $MINER container isn't running, aborting."
+   exit 1
+}
 
 echo "Fetching the latest version"
 docker pull $image > /dev/null
