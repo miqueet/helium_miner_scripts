@@ -51,3 +51,5 @@ echo "this is the ssh password, more than likely its still the default, raspberr
 ASSERT_GW_MINER_OUTPUT=$(sshpass -p $SSH_PASSWORD ssh -oStrictHostKeyChecking=accept-new -p $miner_port pi@$miner_ip $ASSERT_GW )
 
 helium-wallet --format json onboard $ASSERT_GW_MINER_OUTPUT --onboarding $ONBOARD --commit
+
+echo "you're all done!"
