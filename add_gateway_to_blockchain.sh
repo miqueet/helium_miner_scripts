@@ -29,7 +29,7 @@ if [[ $1 -eq "create" ]]; then
 	helium-wallet create basic --seed
 fi
 
-wallet_key_location=$(ls | grep wallet.key)
+wallet_key_location=$(ls | grep -x "wallet.key")
 
 if [[ -z $wallet_key_location ]]; then
 	read -p "Please enter the full path of your wallet.key file: " wallet_key_location
