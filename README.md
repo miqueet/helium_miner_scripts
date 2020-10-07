@@ -1,5 +1,12 @@
 # Helium miner update script
 This script will automatically detect if that latest docker image is running and if this is not the case it will update to the latest docker image.
+## Setup
+
+```
+$ git clone https://github.com/Wheaties466/helium_miner_scripts
+$ cd helium_miner_scripts/
+```
+Then run any of the scripts.
 
 # Dependencies
 Following dependencies shall be met:
