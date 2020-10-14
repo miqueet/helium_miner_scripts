@@ -8,6 +8,14 @@ $ cd helium_miner_scripts/
 ```
 Then run any of the scripts.
 
+## Updating the repo/script to get the lastest version of the script
+
+```
+$ cd helium_miner_scripts/
+$ git pull
+```
+after you're in the same directory as the script and do a git pull. It will let you know if it is up to date or not. 
+
 # Dependencies
 Following dependencies shall be met:
 
