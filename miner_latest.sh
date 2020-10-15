@@ -57,6 +57,11 @@ miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$A
 
 date
 
+#check to see if the miner is more than 50 block behind
+current_height=`curl -s https://api.helium.io/v1/blocks/height | jq .data.height` && sleep 2 ;miner_height=$(docker exec miner miner info height | awk '{print $2}');height_diff=`expr $current_height - $miner_height`
+
+if [[ $height_diff -gt 50 ]]; then docker stop $MINER && docker start $MINER ; fi
+
 if `echo $miner_latest | grep -q $ARCH`;
 then echo "Latest miner version" $miner_latest;
 elif miner_latest=$(curl -s 'https://quay.io/api/v1/repository/team-helium/miner/tag/?limit=100&page=1&onlyActiveTags=true' | jq -r .tags[1].name)
