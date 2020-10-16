@@ -62,6 +62,9 @@ current_height=`curl -s https://api.helium.io/v1/blocks/height | jq .data.height
 
 if [[ $height_diff -gt 50 ]]; then docker stop $MINER && docker start $MINER ; fi
 
+#If the miner is more than 500 blocks behind, stop the image, remove the container, remove the image. It will be redownloaded later in the script.
+if [[ $height_diff -gt 500 ]]; then docker stop $MINER && docker rm $MINER && docker image rm $miner_latest ; fi
+
 if `echo $miner_latest | grep -q $ARCH`;
 then echo "Latest miner version" $miner_latest;
 elif miner_latest=$(curl -s 'https://quay.io/api/v1/repository/team-helium/miner/tag/?limit=100&page=1&onlyActiveTags=true' | jq -r .tags[1].name)
