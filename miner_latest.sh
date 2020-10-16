@@ -73,6 +73,8 @@ fi
 
 if [ "$miner_latest" = "$running_image" ];
 then    echo "already on the latest version"
+	SCRIPT_DIR=$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)
+	cd $SCRIPT_DIR && git pull
         exit 0
 fi
 
@@ -103,3 +105,5 @@ if [ $GWPORT -ne 1680 ] || [ $MINERPORT -ne 44158 ]; then
    docker exec $MINER sed -i "s/44158/$MINERPORT/; s/1680/$GWPORT/" /opt/miner/releases/0.1.0/sys.config
    docker restart $MINER
 fi
+SCRIPT_DIR=$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)
+cd $SCRIPT_DIR && git pull
