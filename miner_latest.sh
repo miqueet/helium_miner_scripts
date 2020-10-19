@@ -56,6 +56,7 @@ fi
 miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH)and contains("GA")) ][0].name' | cut -d'"' -f2)
 
 date
+echo "$0 starting with MINER=$MINER GWPORT=$GWPORT MINERPORT=$MINERPORT DATADIR=$DATADIR REGION=$REGION"
 
 #check to see if the miner is more than 50 block behind
 current_height=`curl -s https://api.helium.io/v1/blocks/height | jq .data.height` && sleep 2 ;miner_height=$(docker exec $MINER miner info height | awk '{print $2}');height_diff=`expr $current_height - $miner_height`
