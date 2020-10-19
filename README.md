@@ -1,5 +1,20 @@
 # Helium miner update script
 This script will automatically detect if that latest docker image is running and if this is not the case it will update to the latest docker image.
+## Setup
+
+```
+$ git clone https://github.com/Wheaties466/helium_miner_scripts
+$ cd helium_miner_scripts/
+```
+Then run any of the scripts.
+
+## Updating the repo/script to get the lastest version of the script
+
+```
+$ cd helium_miner_scripts/
+$ git pull
+```
+after you're in the same directory as the script and do a git pull. It will let you know if it is up to date or not. 
 
 # Dependencies
 Following dependencies shall be met:
@@ -47,7 +62,7 @@ The second line updates this repo on a regular basis.
 
 # Use whatever path you have your repo setup with.
 # If you need to test your cron you can use the following site and add "&& curl -s 'https://webhook.site/#!/~'" to the end of your cron and it will make a web request to your specific url when it completes.
-0 1 * * * /home/pi/helium_miner_scripts/miner_latest.sh >> /var/log/miner_latest.log
+0 */4 * * * /home/pi/helium_miner_scripts/miner_latest.sh 2>&1 >> /var/log/miner_latest.log
 0 0 * * * cd /home/pi/helium_miner_scripts && git pull
 ```
 
@@ -66,6 +81,10 @@ $ docker exec miner miner info height
 Check connectivity of your miner:
 ```
 $ docker exec miner miner peer book -s
+```
+Check the current running miner version
+```
+$ docker container inspect -f '{{.Config.Image}}' miner | awk -F: '{print $2}'
 ```
 
 # If this guide helped you please consider donating HNT the following address

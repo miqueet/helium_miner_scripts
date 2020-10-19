@@ -43,9 +43,12 @@ sudo systemctl start lora-pkt-fwd.service
 sudo touch ~/crondump
 sudo chmod 777 ~/crondump
 sudo crontab -l > ~/crondump
-echo "0 */4 * * * /home/pi/helium_miner_scripts/miner_latest.sh >> /var/log/miner_latest.log" >> ~/crondump
+echo "0 */4 * * * /home/pi/helium_miner_scripts/miner_latest.sh 2>&1 >> /var/log/miner_latest.log" >> ~/crondump
 echo "0 0 * * * cd /home/pi/helium_miner_scripts && git pull" >> ~/crondump
 sudo crontab -u pi ~/crondump
+
+sudo touch /var/log/miner_latest.log
+sudo chmod 777 /var/log/miner_latest.log
 
 echo "remember to backup your swarm key found here: /home/pi/miner_data/miner/swarm_key"
 echo "use WinSCP(or another program) to transfer this file to another computer and back it up. This is VERY IMPORTANT"
@@ -58,11 +61,11 @@ echo " CTRL + C will cancel the webserver, but open a web browser and go to http
 echo "Save the file locally"
 
 # I think one of these was causing issues booting after applying.
-sudo raspi-config nonint do_spi 1
-sudo raspi-config nonint do_i2c 1
-sudo raspi-config nonint do_serial 1
-sudo raspi-config nonint do_wifi_country US
-sudo raspi-config nonint do_ssh 1
+sudo raspi-config nonint do_spi 0
+sudo raspi-config nonint do_i2c 0
+sudo raspi-config nonint do_serial 0
+#sudo raspi-config nonint do_wifi_country US
+#sudo raspi-config nonint do_ssh 0
 
 locale=en_US.UTF-8
 layout=us
