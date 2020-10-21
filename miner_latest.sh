@@ -81,6 +81,9 @@ then    echo "already on the latest version"
         exit 0
 fi
 
+# Pull the new miner image. Downloading it now will minimize miner downtime after stop.
+docker pull quay.io/team-helium/miner:"$miner_latest"
+
 echo "Stopping and removing old miner"
 
 docker stop "$MINER" && docker rm "$MINER"
