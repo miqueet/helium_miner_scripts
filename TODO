@@ -1,6 +1,4 @@
 # Todo list
 
 - Auto recognize the machine architecture.
-- Delete old images
-- check dependencies
-- make region configureable.
+- read from a config file to make updating the repo easier
