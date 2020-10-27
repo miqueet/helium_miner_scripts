@@ -8,6 +8,7 @@ REGION=US915
 GWPORT=1680
 MINERPORT=44158
 DATADIR=/home/pi/miner_data
+QUAY_URL='https://quay.io/api/v1/repository/team-helium/miner/tag/?limit=20&page=1&onlyActiveTags=true'
 
 # Make sure we have the latest version of the script
 function update-git {
@@ -31,22 +32,15 @@ do
 done
 
 # Autodetect running image version and set arch
-running_image=$(docker container inspect -f '{{.Config.Image}}' "$MINER" | awk -F: '{print $2}')
-if [ -z "$running_image" ]; then
-	ARCH=arm
-elif [ "$(echo "$running_image" | awk -F_ '{print $1}')" == "miner-arm64" ]; then
-	ARCH=arm
-elif [ "$(echo "$running_image" | awk -F_ '{print $1}')" == "miner-amd64" ]; then 
-	ARCH=amd
+if [ "$(uname -m)" == "x86_64" ]; then
+        ARCH=amd
 else
-	ARCH=arm
-	#below is just to make it not null.
-	running_image=" "
+        ARCH=arm
 fi
 
-#miner_latest=$(curl -s 'https://quay.io/api/v1/repository/team-helium/miner/tag/?limit=100&page=1&onlyActiveTags=true' | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH)) ][0].name' | cut -d'"' -f2)
+running_image=$(docker container inspect -f '{{.Config.Image}}' "$MINER" | awk -F: '{print $2}')
 
-miner_quay=$(curl -s 'https://quay.io/api/v1/repository/team-helium/miner/tag/?limit=100&page=1&onlyActiveTags=true' --write-out '\nHTTP_Response:%{http_code}')
+miner_quay=$(curl -s "$QUAY_URL" --write-out '\nHTTP_Response:%{http_code}')
 
 miner_response=$(echo "$miner_quay" | grep "HTTP_Response" | cut -d":" -f2)
 
@@ -59,10 +53,12 @@ fi
 miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH)and contains("GA")) ][0].name' | cut -d'"' -f2)
 
 date
-echo "$0 starting with MINER=$MINER GWPORT=$GWPORT MINERPORT=$MINERPORT DATADIR=$DATADIR REGION=$REGION"
+echo "$0 starting with MINER=$MINER GWPORT=$GWPORT MINERPORT=$MINERPORT DATADIR=$DATADIR REGION=$REGION ARCH=$ARCH running_image=$running_image miner_latest=$miner_latest"
 
 #check to see if the miner is more than 50 block behind
-current_height=$(curl -s https://api.helium.io/v1/blocks/height | jq .data.height) && sleep 2 ;miner_height=$(docker exec "$MINER" miner info height | awk '{print $2}');height_diff=$(expr "$current_height" - "$miner_height")
+current_height=$(curl -s https://api.helium.io/v1/blocks/height | jq .data.height)
+miner_height=$(docker exec "$MINER" miner info height | awk '{print $2}')
+height_diff=$(expr "$current_height" - "$miner_height")
 
 if [[ $height_diff -gt 50 ]]; then docker stop "$MINER" && docker start "$MINER" ; fi
 
@@ -70,9 +66,9 @@ if [[ $height_diff -gt 50 ]]; then docker stop "$MINER" && docker start "$MINER"
 if [[ $height_diff -gt 500 ]]; then docker stop "$MINER" && docker rm "$MINER" && docker image rm "$miner_latest" ; fi
 
 if echo "$miner_latest" | grep -q $ARCH;
-then echo "Latest miner version $miner_latest";
-elif miner_latest=$(curl -s 'https://quay.io/api/v1/repository/team-helium/miner/tag/?limit=100&page=1&onlyActiveTags=true' | jq -r .tags[1].name)
-then echo "Latest miner version $miner_latest";
+        then echo "Latest miner version $miner_latest";
+elif miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -r .tags[1].name)
+        then echo "Latest miner version $miner_latest";
 fi
 
 if [ "$miner_latest" = "$running_image" ];
