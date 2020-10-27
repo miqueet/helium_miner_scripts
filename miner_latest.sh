@@ -58,7 +58,7 @@ echo "$0 starting with MINER=$MINER GWPORT=$GWPORT MINERPORT=$MINERPORT DATADIR=
 #check to see if the miner is more than 50 block behind
 current_height=$(curl -s https://api.helium.io/v1/blocks/height | jq .data.height)
 miner_height=$(docker exec "$MINER" miner info height | awk '{print $2}');
-height_diff=$(expr "$current_height" - "$miner_height") || height_diff=999 # Set the height diff high if we cannot calculate the real difference
+height_diff=$(expr "$current_height" - "$miner_height")
 
 if [[ $height_diff -gt 50 ]]; then docker stop "$MINER" && docker start "$MINER" ; fi
 
