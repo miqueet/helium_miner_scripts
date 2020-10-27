@@ -8,7 +8,7 @@ REGION=US915
 GWPORT=1680
 MINERPORT=44158
 DATADIR=/home/pi/miner_data
-QUAY_URL='https://quay.io/api/v1/repository/team-helium/miner/tag/?limit=6&page=1&onlyActiveTags=true'
+QUAY_URL='https://quay.io/api/v1/repository/team-helium/miner/tag/?limit=20&page=1&onlyActiveTags=true'
 
 # Make sure we have the latest version of the script
 function update-git {
