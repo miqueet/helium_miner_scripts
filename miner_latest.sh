@@ -100,7 +100,7 @@ done
 
 echo "Provisioning new miner version"
 
-docker run -d --env REGION_OVERRIDE="$REGION" --restart always --publish "$GWPORT":"$GWPORT"/udp --publish "$MINERPORT":"$MINERPORT"/tcp --name "$MINER" --mount type=bind,source="$DATADIR",target=/var/data quay.io/team-helium/miner:"$miner_latest"
+docker run -d --init --env REGION_OVERRIDE="$REGION" --restart always --publish "$GWPORT":"$GWPORT"/udp --publish "$MINERPORT":"$MINERPORT"/tcp --name "$MINER" --mount type=bind,source="$DATADIR",target=/var/data quay.io/team-helium/miner:"$miner_latest"
 
 if [ "$GWPORT" -ne 1680 ] || [ "$MINERPORT" -ne 44158 ]; then
    echo "Using nonstandard ports, adjusting miner config"
