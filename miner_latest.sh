@@ -8,6 +8,7 @@ REGION=US915
 GWPORT=1680
 MINERPORT=44158
 DATADIR=/home/pi/miner_data
+LOGDIR=
 QUAY_URL='https://quay.io/api/v1/repository/team-helium/miner/tag/?limit=20&page=1&onlyActiveTags=true'
 
 # Make sure we have the latest version of the script
@@ -19,13 +20,14 @@ function update-git {
 command -v jq > /dev/null || sudo apt-get install jq curl -y
 
 # Read switches to override any default values for non-standard configs
-while getopts n:g:p:d:r: flag
+while getopts n:g:p:d:l:r: flag
 do
    case "${flag}" in
       n) MINER=${OPTARG};;
       g) GWPORT=${OPTARG};;
       p) MINERPORT=${OPTARG};;
       d) DATADIR=${OPTARG};;
+      l) LOGDIR=${OPTARG};;
       r) REGION=${OPTARG};;
       *) echo "Exiting"; exit;;
    esac
@@ -53,7 +55,7 @@ fi
 miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH)and contains("GA")) ][0].name' | cut -d'"' -f2)
 
 date
-echo "$0 starting with MINER=$MINER GWPORT=$GWPORT MINERPORT=$MINERPORT DATADIR=$DATADIR REGION=$REGION ARCH=$ARCH running_image=$running_image miner_latest=$miner_latest"
+echo "$0 starting with MINER=$MINER GWPORT=$GWPORT MINERPORT=$MINERPORT DATADIR=$DATADIR LOGDIR=$LOGDIR REGION=$REGION ARCH=$ARCH running_image=$running_image miner_latest=$miner_latest"
 
 #check to see if the miner is more than 50 block behind
 current_height=$(curl -s https://api.helium.io/v1/blocks/height | jq .data.height)
@@ -100,7 +102,12 @@ done
 
 echo "Provisioning new miner version"
 
-docker run -d --init --env REGION_OVERRIDE="$REGION" --restart always --publish "$GWPORT":"$GWPORT"/udp --publish "$MINERPORT":"$MINERPORT"/tcp --name "$MINER" --mount type=bind,source="$DATADIR",target=/var/data quay.io/team-helium/miner:"$miner_latest"
+if [ -n "$LOGDIR" ];
+then
+	LOGMOUNT="--mount type=bind,source=$LOGDIR,target=/var/log"
+fi
+
+docker run -d --init --env REGION_OVERRIDE="$REGION" --restart always --publish "$GWPORT":"$GWPORT"/udp --publish "$MINERPORT":"$MINERPORT"/tcp --name "$MINER" $LOGMOUNT --mount type=bind,source="$DATADIR",target=/var/data quay.io/team-helium/miner:"$miner_latest"
 
 if [ "$GWPORT" -ne 1680 ] || [ "$MINERPORT" -ne 44158 ]; then
    echo "Using nonstandard ports, adjusting miner config"
