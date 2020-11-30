@@ -60,16 +60,17 @@ current_height=$(curl -s https://api.helium.io/v1/blocks/height | jq .data.heigh
 miner_height=$(docker exec "$MINER" miner info height | awk '{print $2}')
 height_diff=$(expr "$current_height" - "$miner_height")
 
-if [[ $height_diff -gt 50 ]]; then docker stop "$MINER" && docker start "$MINER" && echo "stopping and starting the miner because it may be stuck syncing the blockchain" ; fi
+# commenting this out until I can find a better solution. Seems to be causing more problems than solutions.
+##if [[ $height_diff -gt 50 ]]; then docker stop "$MINER" && docker start "$MINER" && echo "stopping and starting the miner because it may be stuck syncing the blockchain" ; fi
 
 #If the miner is more than 500 blocks behind, stop the image, remove the container, remove the image. It will be redownloaded later in the script.
-if [[ $height_diff -gt 500 ]]; then docker stop "$MINER" && docker rm "$MINER" && docker image rm quay.io/team-helium/miner:"$miner_latest" ; fi
+##if [[ $height_diff -gt 500 ]]; then docker stop "$MINER" && docker rm "$MINER" && docker image rm quay.io/team-helium/miner:"$miner_latest" ; fi
 
-if echo "$miner_latest" | grep -q $ARCH;
-        then echo "Latest miner version $miner_latest";
-elif miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -r .tags[1].name)
-        then echo "Latest miner version $miner_latest";
-fi
+##if echo "$miner_latest" | grep -q $ARCH;
+##        then echo "Latest miner version $miner_latest";
+##elif miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -r .tags[1].name)
+##        then echo "Latest miner version $miner_latest";
+##fi
 
 if [ "$miner_latest" = "$running_image" ];
 then    echo "already on the latest version"
