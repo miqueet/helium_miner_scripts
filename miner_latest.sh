@@ -104,7 +104,7 @@ echo "Provisioning new miner version"
 
 if [ -n "$LOGDIR" ];
 then
-	LOGMOUNT="--mount type=bind,source=$LOGDIR,target=/var/log"
+	LOGMOUNT="--mount type=bind,source=$LOGDIR,target=/var/data/log"
 fi
 
 docker run -d --init --env REGION_OVERRIDE="$REGION" --restart always --publish "$GWPORT":"$GWPORT"/udp --publish "$MINERPORT":"$MINERPORT"/tcp --name "$MINER" $LOGMOUNT --mount type=bind,source="$DATADIR",target=/var/data quay.io/team-helium/miner:"$miner_latest"
