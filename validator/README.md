@@ -26,6 +26,15 @@ cd helium-wallet-rs
 cargo build --release
 ```
 
+
+# To setup a cron to have this run on a schedule feel free to use this cronjob
+```
+crontab -e
+```
+paste in the following
+```
+0 */4 * * * ~/helium_miner_scripts/validator/validator_latest.sh 2>&1 >> /var/log/validator_latest.log
+```
 I haven't done some of the checks ive done in the past and i will make a script to make staking the coins a bit more automated. I also hope to add in a command line arg to delete the validator data dir.
 
 
