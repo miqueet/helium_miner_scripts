@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script for auto updating the helium miner.
+# Script for auto updating the helium validator.
 
 # Set default values
 
