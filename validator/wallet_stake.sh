@@ -21,3 +21,20 @@ if [ $WALLET_KEY -z ]; then
 	sudo updatedb
         WALLET_KEY=$(locate wallet.key | head -n 1)
 fi
+
+WALLET_BALANCE=$($WALLET_BIN -f $WALLET_KEY info | grep -i balance | grep -v "DC\|Securities" | awk '{print $4}')
+
+WALLET_ADDR=$(/home/helium/helium-wallet-rs/bin/helium-wallet -f $WALLET_KEY info | grep "Address" | awk '{print $4}')
+
+if [[ $WALLET_BALLANCE -lt 10000 ]]; then
+	echo " Wallet balance is less than 10k, go to https://faucet.helium.wtf/ to re up. submit the following wallet address" $WALLET_ADDR
+	exit 0
+fi
+
+WALLET_ADDR=$(/home/helium/helium-wallet-rs/bin/helium-wallet -f $WALLET_KEY info | grep "Address" | awk '{print $4}')
+
+PEER_ADDR=$(sudo docker exec validator miner peer addr | cut -d'/' -f3)
+
+$WALLET_BIN validators stake $PEER_ADDR 10000 --commit
+
+echo "funds should be sucessfully staked"
