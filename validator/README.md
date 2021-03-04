@@ -9,10 +9,10 @@ cp config.txt.tmp config.txt
 
 if the testnet chain needs to be restarted you will need to perform the following to start over.
 ```
-docker stop validator && docker rm validator
+sudo docker stop validator && sudo docker rm validator
 rm -rf ~/validator_data/*
 ./validator_update.sh
-{restake hnt}
+./wallet_stake.sh
 ```
 
 # First it assumes you have the helium wallet software installed
