@@ -35,6 +35,15 @@ do
    esac
 done
 
+#make sure the miner is not in CG if it is, then exit the script
+minerInConsenus=$(docker exec "$MINER" miner info in_consensus | awk)
+if [[$minerInConsenus -eq true]];
+    then 
+    echo "This validator is in Consenus Group no update for it"
+    exit 0
+    
+fi
+
 # Autodetect running image version and set arch
 if [ "$(uname -m)" == "x86_64" ]; then
         ARCH=amd
@@ -73,11 +82,11 @@ fi
 # Pull the new miner image. Downloading it now will minimize miner downtime after stop.
 docker pull quay.io/team-helium/validator:"$miner_latest"
 
-echo "Stopping and removing old miner"
+echo "Stopping and removing old validator software"
 
 docker stop "$MINER" && docker rm "$MINER"
 
-echo "Deleting old miner software"
+echo "Deleting old validator software"
 
 for image in $(docker images quay.io/team-helium/validator | grep "quay.io/team-helium/validator" | awk '{print $3}'); do
 	image_cleanup=$(docker images | grep "$image" | awk '{print $2}')

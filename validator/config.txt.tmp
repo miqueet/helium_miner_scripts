@@ -1,1 +1,9 @@
 DATADIR=~/validator_data/
+
+MINER=validator
+
+WALLET_BIN=
+
+WALLET_KEY=
+
+NETWORK=testnet

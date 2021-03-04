@@ -1,0 +1,7 @@
+#I am hoping to compile useful commands here as a reference. These can be for monitoring, staking, w/e
+#
+#To find the name of your miner
+docker exec validator miner info name
+
+#find peer address
+docker exec validator miner peer addr
