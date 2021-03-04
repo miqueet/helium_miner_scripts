@@ -11,7 +11,7 @@ if the testnet chain needs to be restarted you will need to perform the followin
 ```
 sudo docker stop validator && sudo docker rm validator
 rm -rf ~/validator_data/*
-./validator_update.sh
+./validator_latest.sh
 ./wallet_stake.sh
 ```
 
