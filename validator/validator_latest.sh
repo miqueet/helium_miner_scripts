@@ -36,8 +36,8 @@ do
 done
 
 #make sure the miner is not in CG if it is, then exit the script
-minerInConsenus=$(docker exec "$MINER" miner info in_consensus | awk)
-if [[$minerInConsenus -eq true]];
+minerInConsenus=$(docker exec "$MINER" miner info in_consensus)
+if [[ $minerInConsenus -eq true ]];
     then 
     echo "This validator is in Consenus Group no update for it"
     exit 0
