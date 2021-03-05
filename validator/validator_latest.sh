@@ -66,7 +66,7 @@ fi
 miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH)and contains("miner")) ][0].name' | cut -d'"' -f2)
 
 date
-echo "$0 starting with MINER=$MINER DATADIR=$DATADIR ARCH=$ARCH running_image=$running_image miner_latest=$miner_latest"
+echo "$0 starting with MINER=$MINER DATADIR=$DATADIR ARCH=$ARCH running_image=$running_image miner_latest=$miner_latest NAT_INTERNAL_IP=$NAT_INTERNAL_IP NAT_EXTERNAL_IP=$NAT_EXTERNAL_IP NAT_INTERNAL_PORT=$NAT_INTERNAL_PORT NAT_EXTERNAL_PORT=$NAT_EXTERNAL_PORT"
 
 #check to see if the miner is more than 50 block behind
 current_height=$(curl -s 'https://testnet-api.helium.wtf/v1/blocks/height' | jq .data.height)
@@ -103,6 +103,13 @@ done
 echo "Provisioning new miner version"
 
 
-docker run -d --init --restart always --name "$MINER" --publish 2154:2154/tcp --mount type=bind,source="$DATADIR",target=/var/data quay.io/team-helium/validator:"$miner_latest"
+#docker run -d --init --restart always --name "$MINER" --publish 2154:2154/tcp --mount type=bind,source="$DATADIR",target=/var/data quay.io/team-helium/validator:"$miner_latest"
+
+#New logic to support the NAT configurations. ADD these variables to the config.txt file to use them in the below statement
+
+if [[ -z "$NAT_INTERNAL_IP" ]]; then
+	docker run -d --init --restart always --name "$MINER" --publish 2154:2154/tcp --mount type=bind,source="$DATADIR",target=/var/data quay.io/team-helium/validator:"$miner_latest"
+else docker run -d --init --restart always --name "$MINER" -e NAT_INTERNAL_IP=$NAT_INTERNAL_IP -e NAT_EXTERNAL_IP=$NAT_EXTERNAL_IP -e NAT_INTERNAL_PORT=$NAT_INTERNAL_PORT -e NAT_EXTERNAL_PORT=$NAT_EXTERNAL_PORT --publish 2154:2154/tcp --mount type=bind,source="$DATADIR",target=/var/data quay.io/team-helium/validator:"$miner_latest"
+fi
 
 update-git

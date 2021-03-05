@@ -7,3 +7,12 @@ WALLET_BIN=
 WALLET_KEY=
 
 NETWORK=testnet
+
+#an example on how to get your external IP 
+# NAT_EXTERNAL_IP=$(curl -4 icanhazip.com) 
+
+NAT_INTERNAL_IP=
+NAT_EXTERNAL_IP=
+NAT_INTERNAL_PORT=2154
+NAT_EXTERNAL_PORT=2154
+

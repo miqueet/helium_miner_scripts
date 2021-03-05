@@ -37,6 +37,6 @@ WALLET_ADDR=$(/home/helium/helium-wallet-rs/bin/helium-wallet -f $WALLET_KEY inf
 
 PEER_ADDR=$(sudo docker exec validator miner peer addr | cut -d'/' -f3)
 
-$WALLET_BIN validators stake $PEER_ADDR 10000 --commit
+$WALLET_BIN -f $WALLET_KEY validators stake $PEER_ADDR 10000 --commit
 
 echo "funds should be sucessfully staked"
