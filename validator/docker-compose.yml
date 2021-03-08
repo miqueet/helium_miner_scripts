@@ -1,0 +1,24 @@
+# launch: docker-compose up -d
+version: "3.7"
+services:
+  validator:
+    image: quay.io/team-helium/validator:latest-val-amd64
+    init: true # requires d-c version 3.7+. Wraps validator to reap zombies.
+    container_name: validator
+    ports:
+    - "2154:2154/tcp"
+    volumes:
+    - "${HOME}/validator_data/:/var/data"
+    env_file:
+    - my.env
+  val_watchtower:
+    image: containrrr/watchtower:latest
+    container_name: val_watchtower
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    command: validator # the container name(s) to monitor
+    environment:
+    - WATCHTOWER_POLL_INTERVAL=1800
+    env_file:
+    - my.env
+
