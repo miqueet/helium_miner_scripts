@@ -10,8 +10,14 @@ cp config.txt.tmp config.txt
 if the testnet chain needs to be restarted you will need to perform the following to start over.
 ```
 sudo docker stop validator && sudo docker rm validator
+sudo cp ~/validator_data/miner/swarm_key ~
 rm -rf ~/validator_data/*
 ./validator_latest.sh
+sleep 10
+sudo docker stop validator
+sudo cp ~/swarm_key ~/validator_data/miner/swarm_key
+sudo docker start validator
+sleep 60
 ./wallet_stake.sh
 ```
 
