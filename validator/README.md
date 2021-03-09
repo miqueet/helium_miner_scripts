@@ -44,3 +44,6 @@ paste in the following
 I haven't done some of the checks ive done in the past and i will make a script to make staking the coins a bit more automated. I also hope to add in a command line arg to delete the validator data dir.
 
 
+# docker-compose
+
+As an alternative to running `docker` directly, `docker-compose` will start the validator and watchtower, a sidecar that watches for an updated `:latest` tag. Run the `run_docker_compose.sh` script to initialize your validator, or make changes as you would like.
