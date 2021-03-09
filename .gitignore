@@ -1,2 +1,3 @@
 validator/my.env
 validator/config.txt
+validator/docker-compose.yml
