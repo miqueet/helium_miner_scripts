@@ -43,6 +43,10 @@ paste in the following
 ```
 I haven't done some of the checks ive done in the past and i will make a script to make staking the coins a bit more automated. I also hope to add in a command line arg to delete the validator data dir.
 
+# To run the script without updating the git repo
+```
+ ./validator_latest.sh -u no
+```
 
 # docker-compose
 

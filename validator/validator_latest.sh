@@ -15,6 +15,7 @@ MINER=validator
 #DATADIR=~/validator_data
 LOGDIR=
 QUAY_URL='https://quay.io/api/v1/repository/team-helium/validator/tag/?limit=20&page=1&onlyActiveTags=true'
+UPDATE=yes
 
 # Make sure we have the latest version of the script
 function update-git {
@@ -25,12 +26,13 @@ function update-git {
 command -v jq > /dev/null || sudo apt-get install jq curl -y
 
 # Read switches to override any default values for non-standard configs
-while getopts n:d:l: flag
+while getopts n:d:l:u: flag
 do
    case "${flag}" in
       n) MINER=${OPTARG};;
       d) DATADIR=${OPTARG};;
       l) LOGDIR=${OPTARG};;
+      u) UPDATE=${OPTARG};;
       *) echo "Exiting"; exit;;
    esac
 done
@@ -75,7 +77,12 @@ height_diff=$(expr "$current_height" - "$miner_height")
 
 if [ "$miner_latest" = "$running_image" ];
 then    echo "already on the latest version"
-	update-git
+if [ $UPDATE == no ]; then
+        echo "Exiting with no git repo update due to argument flag"
+	exit 0
+else
+        update-git
+fi
         exit 0
 fi
 
@@ -112,4 +119,8 @@ if [[ -z "$NAT_INTERNAL_IP" ]]; then
 else docker run -d --init --restart always --name "$MINER" -e NAT_INTERNAL_IP=$NAT_INTERNAL_IP -e NAT_EXTERNAL_IP=$NAT_EXTERNAL_IP -e NAT_INTERNAL_PORT=$NAT_INTERNAL_PORT -e NAT_EXTERNAL_PORT=$NAT_EXTERNAL_PORT --publish 2154:2154/tcp --mount type=bind,source="$DATADIR",target=/var/data quay.io/team-helium/validator:"$miner_latest"
 fi
 
-update-git
+if [ $UPDATE == no ]; then
+	echo "Exiting with no git repo update due to argument flag"
+else
+	update-git
+fi
