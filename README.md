@@ -1,6 +1,8 @@
 # Helium miner update script
 This script will automatically detect if that latest docker image is running and if this is not the case it will update to the latest docker image.
 
+# For the Validator scripts, see the /Validator directory
+
 # If this guide/script helped you please consider donating HNT the following address
 ```
 13UcQB9B867b6Fp6cwtKgzxfwrr61sbxMpPsXChqPYRr9iFoTar
