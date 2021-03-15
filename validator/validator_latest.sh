@@ -38,13 +38,13 @@ do
 done
 
 #make sure the miner is not in CG if it is, then exit the script
-minerInConsenus=$(docker exec "$MINER" miner info in_consensus)
-if [[ $minerInConsenus == true ]];
-    then 
-    echo "This validator is in Consenus Group no update for it"
-    exit 0
-    
-fi
+#minerInConsenus=$(docker exec "$MINER" miner info in_consensus)
+#if [[ $minerInConsenus == true ]];
+#    then 
+#    echo "This validator is in Consenus Group no update for it"
+#    exit 0
+#    
+#fi
 
 # Autodetect running image version and set arch
 if [ "$(uname -m)" == "x86_64" ]; then
