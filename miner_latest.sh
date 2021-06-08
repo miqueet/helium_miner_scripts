@@ -113,6 +113,10 @@ docker run -d --init --env REGION_OVERRIDE="$REGION" --restart always --publish 
 if [ "$GWPORT" -ne 1680 ] || [ "$MINERPORT" -ne 44158 ]; then
    echo "Using nonstandard ports, adjusting miner config"
    docker exec "$MINER" sed -i "/^  {blockchain,/{N;s/$/\n      {port, $MINERPORT},/}; s/1680/$GWPORT/" /opt/miner/releases/0.1.0/sys.config
-   docker restart "$MINER"
 fi
+
+echo "Increasing memory limit for snapshots. See https://discord.com/channels/404106811252408320/730245219974381708/851336745538027550"
+docker exec "$MINER" sed -i 's/{key, undefined}$/{key, undefined},{snapshot_memory_limit, 1000}/' /opt/miner/releases/0.1.0/sys.config
+docker restart "$MINER"
+
 update-git
