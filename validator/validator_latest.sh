@@ -65,7 +65,15 @@ if [[ $miner_response -ne 200 ]];
 	exit 0
 fi
 
-miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH)and contains("miner")) ][0].name' | cut -d'"' -f2)
+#Autodetect running network main or test
+if [[ "$running_image" =~ .*"testnet".* ]];
+        then
+        echo "This is a testnet Validator"
+        miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH) and contains("miner") and contains("testnet")) ][0].name' | cut -d'"' -f2)
+else
+        echo "This is a mainnet validator"
+        miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH) and contains("miner") and contains("validator")) ][0].name' | cut -d'"' -f2)
+fi
 
 date
 echo "$0 starting with MINER=$MINER DATADIR=$DATADIR ARCH=$ARCH running_image=$running_image miner_latest=$miner_latest NAT_INTERNAL_IP=$NAT_INTERNAL_IP NAT_EXTERNAL_IP=$NAT_EXTERNAL_IP NAT_INTERNAL_PORT=$NAT_INTERNAL_PORT NAT_EXTERNAL_PORT=$NAT_EXTERNAL_PORT"
