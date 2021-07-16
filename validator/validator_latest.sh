@@ -123,8 +123,8 @@ echo "Provisioning new miner version"
 #New logic to support the NAT configurations. ADD these variables to the config.txt file to use them in the below statement
 
 if [[ -z "$NAT_INTERNAL_IP" ]]; then
-	docker run -d --init --restart always --name "$MINER" --publish 2154:2154/tcp --mount type=bind,source="$DATADIR",target=/var/data quay.io/team-helium/validator:"$miner_latest"
-else docker run -d --init --restart always --name "$MINER" -e NAT_INTERNAL_IP=$NAT_INTERNAL_IP -e NAT_EXTERNAL_IP=$NAT_EXTERNAL_IP -e NAT_INTERNAL_PORT=$NAT_INTERNAL_PORT -e NAT_EXTERNAL_PORT=$NAT_EXTERNAL_PORT --publish 2154:2154/tcp --mount type=bind,source="$DATADIR",target=/var/data quay.io/team-helium/validator:"$miner_latest"
+	docker run -d --init --restart always --name "$MINER" --publish 2154:2154/tcp --publish 8080:8080/tcp --mount type=bind,source="$DATADIR",target=/var/data quay.io/team-helium/validator:"$miner_latest"
+else docker run -d --init --restart always --name "$MINER" -e NAT_INTERNAL_IP=$NAT_INTERNAL_IP -e NAT_EXTERNAL_IP=$NAT_EXTERNAL_IP -e NAT_INTERNAL_PORT=$NAT_INTERNAL_PORT -e NAT_EXTERNAL_PORT=$NAT_EXTERNAL_PORT --publish 2154:2154/tcp --publish 8080:8080/tcp --mount type=bind,source="$DATADIR",target=/var/data quay.io/team-helium/validator:"$miner_latest"
 fi
 
 if [ $UPDATE == no ]; then
