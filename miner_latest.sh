@@ -53,6 +53,10 @@ if [[ $miner_response -ne 200 ]];
 fi
 
 miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH)and contains("GA")) ][0].name' | cut -d'"' -f2)
+#test url
+#miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH)and contains("64_202")) ][0].name' | cut -d'"' -f2)
+
+
 
 date
 echo "$0 starting with MINER=$MINER GWPORT=$GWPORT MINERPORT=$MINERPORT DATADIR=$DATADIR LOGDIR=$LOGDIR REGION=$REGION ARCH=$ARCH running_image=$running_image miner_latest=$miner_latest"
