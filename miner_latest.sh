@@ -10,6 +10,8 @@ MINERPORT=44158
 DATADIR=/home/pi/miner_data
 LOGDIR=
 QUAY_URL='https://quay.io/api/v1/repository/team-helium/miner/tag/?limit=20&page=1&onlyActiveTags=true'
+GA=GA
+#The alternative to GA is GA=64_202
 
 # Make sure we have the latest version of the script
 function update-git {
@@ -29,6 +31,7 @@ do
       d) DATADIR=${OPTARG};;
       l) LOGDIR=${OPTARG};;
       r) REGION=${OPTARG};;
+      a) GA=${OPTARG};;
       *) echo "Exiting"; exit;;
    esac
 done
@@ -52,14 +55,19 @@ if [[ $miner_response -ne 200 ]];
 	exit 0
 fi
 
-miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH)and contains("GA")) ][0].name' | cut -d'"' -f2)
+#if [[ $GA == GA ]];
+#	then
+#	miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH)and contains("GA")) ][0].name' | cut -d'"' -f2)
+#	else
+#	miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH)and contains("64_202")) ][0].name' | cut -d'"' -f2)
+#fi
 #test url
 #miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH)and contains("64_202")) ][0].name' | cut -d'"' -f2)
 
-
+miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH)and contains("GA")) ][0].name' | cut -d'"' -f2)
 
 date
-echo "$0 starting with MINER=$MINER GWPORT=$GWPORT MINERPORT=$MINERPORT DATADIR=$DATADIR LOGDIR=$LOGDIR REGION=$REGION ARCH=$ARCH running_image=$running_image miner_latest=$miner_latest"
+echo "$0 starting with MINER=$MINER GWPORT=$GWPORT MINERPORT=$MINERPORT DATADIR=$DATADIR LOGDIR=$LOGDIR REGION=$REGION ARCH=$ARCH running_image=$running_image miner_latest=$miner_latest GA=$GA"
 
 #check to see if the miner is more than 50 block behind
 current_height=$(curl -s https://api.helium.io/v1/blocks/height | jq .data.height)
