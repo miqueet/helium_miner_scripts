@@ -69,10 +69,10 @@ fi
 if [[ "$running_image" =~ .*"testnet".* ]];
         then
         echo "This is a testnet Validator"
-        miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH) and contains("miner") and contains("testnet")) ][0].name' | cut -d'"' -f2)
+        miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH) and contains("validator") and contains("testnet")) ][0].name' | cut -d'"' -f2)
 else
         echo "This is a mainnet validator"
-        miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH) and contains("miner") and contains("validator")) ][0].name' | cut -d'"' -f2)
+        miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH) and contains("validator") and (contains("testnet") | not)) ][0].name' | cut -d'"' -f2)
 fi
 
 date
