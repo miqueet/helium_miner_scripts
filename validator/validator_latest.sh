@@ -69,11 +69,14 @@ fi
 if [[ "$running_image" =~ .*"testnet".* ]];
         then
         echo "This is a testnet Validator"
-        miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH) and contains("validator") and contains("testnet")) ][0].name' | cut -d'"' -f2)
+        miner_latest_id=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH) and contains("latest-val-")) ][0].image_id' | cut -d'"' -f2)
 else
         echo "This is a mainnet validator"
-        miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH) and contains("validator") and (contains("testnet") | not)) ][0].name' | cut -d'"' -f2)
+        miner_latest_id=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg ARCH "$ARCH" '[ .tags[] | select( .name | contains($ARCH) and contains("latest-validator-")) ][0].image_id' | cut -d'"' -f2)
 fi
+# now that we have the ID of the image that we want thats GA, let get it and install it so the docker image will have the version in it.
+miner_latest=$(echo "$miner_quay" | grep -v HTTP_Response | jq -c --arg MIID "$miner_latest_id" '[ .tags[] | select( .image_id==$MIID) ][1].name' | cut -d'"' -f2)
+echo "We will be installing $miner_latest"
 
 date
 echo "$0 starting with MINER=$MINER DATADIR=$DATADIR ARCH=$ARCH running_image=$running_image miner_latest=$miner_latest NAT_INTERNAL_IP=$NAT_INTERNAL_IP NAT_EXTERNAL_IP=$NAT_EXTERNAL_IP NAT_INTERNAL_PORT=$NAT_INTERNAL_PORT NAT_EXTERNAL_PORT=$NAT_EXTERNAL_PORT"
